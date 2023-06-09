@@ -1,28 +1,19 @@
-FROM node:lts-buster
-
-RUN apt-get update && \
-  apt-get install -y \
+FROM nikolaik/python-nodejs:latest
+RUN apt update -y
+RUN apt upgrade -y
+RUN apt-get install -y --no-install-recommends \
   git \
+  neofetch \
   ffmpeg \
-  imagemagick \
-  webp && \
-  apt-get upgrade -y && \
-  rm -rf /var/lib/apt/lists/*
-
-# Menghapus workdir sebelumnya
-RUN rm -rf /app
-
+  wget \
+  sudo \
+  tesseract-ocr \
+  chromium \
+  imagemagick
+RUN pip install pillow
+RUN npm install -g npm@latest
+RUN npm install -g forever@latest
 WORKDIR /app
-
-RUN git clone https://github.com/AyGemuy/Hinata.git .
-
-# Mematikan npm sebelumnya dan menginstall ulang paket
-RUN pkill npm || true
-RUN rm -rf node_modules
-RUN rm -f package-lock.json
-COPY package*.json ./
+RUN git clone https://github.com/AyGemuy/HinataV2.git .
 RUN npm install
-
-EXPOSE 5000
-
 CMD ["npm", "start"]
